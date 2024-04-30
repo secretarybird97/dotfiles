@@ -1,0 +1,104 @@
+# Use modern completion system
+autoload -Uz compinit && compinit
+bindkey -v
+
+# Keep 1000 lines of history within the shell and save it to ~/.zsh_history:
+HISTSIZE=1000
+SAVEHIST=1000
+HISTFILE=~/.zsh_history
+
+### Added by Zinit's installer
+if [[ ! -f $HOME/.local/share/zinit/zinit.git/zinit.zsh ]]; then
+    print -P "%F{33} %F{220}Installing %F{33}ZDHARMA-CONTINUUM%F{220} Initiative Plugin Manager (%F{33}zdharma-continuum/zinit%F{220})…%f"
+    command mkdir -p "$HOME/.local/share/zinit" && command chmod g-rwX "$HOME/.local/share/zinit"
+    command git clone https://github.com/zdharma-continuum/zinit "$HOME/.local/share/zinit/zinit.git" && \
+        print -P "%F{33} %F{34}Installation successful.%f%b" || \
+        print -P "%F{160} The clone has failed.%f%b"
+fi
+
+source "$HOME/.local/share/zinit/zinit.git/zinit.zsh"
+autoload -Uz _zinit
+(( ${+_comps} )) && _comps[zinit]=_zinit
+### End of Zinit's installer chunk
+eval "$(zoxide init zsh)"
+
+# Set up fzf key bindings and fuzzy completion
+eval "$(fzf --zsh)"
+
+# Zinit plugins
+zinit wait lucid for \
+ atinit"ZINIT[COMPINIT_OPTS]=-C; zicompinit; zicdreplay" \
+    zdharma-continuum/fast-syntax-highlighting \
+ blockf \
+    zsh-users/zsh-completions \
+ atload"!_zsh_autosuggest_start" \
+    zsh-users/zsh-autosuggestions
+
+zinit snippet OMZP::git
+zinit snippet OMZP::sudo
+
+setopt HIST_IGNORE_ALL_DUPS  # do not put duplicated command into history list
+setopt HIST_SAVE_NO_DUPS  # do not save duplicated command
+setopt HIST_REDUCE_BLANKS  # remove unnecessary blanks
+setopt INC_APPEND_HISTORY_TIME  # append command to history file immediately after execution
+setopt EXTENDED_HISTORY  # record command start time
+setopt AUTO_CD
+
+alias sudo='sudo '
+alias cd='z'
+alias ls='eza'
+alias ll='eza -lh'
+alias cls='clear && clear'
+
+# Conditional aliases based on command availability
+if command -v bat > /dev/null; then
+   alias cat='bat --paging=never'
+elif command -v batcat > /dev/null; then
+   alias cat='batcat --paging=never'
+fi
+
+if uname -r | grep -q 'microsoft' ; then
+    sysdup_cmd='sudo nala update && sudo nala upgrade'
+elif command -v zypper > /dev/null; then
+    sysdup_cmd='sudo zypper dup && flatpak update'
+elif command -v nala > /dev/null; then
+    sysdup_cmd='sudo nala update && sudo nala upgrade && flatpak update'
+elif command -v apt > /dev/null; then
+    sysdup_cmd='sudo apt update && sudo apt upgrade && flatpak update'
+elif command -v dnf > /dev/null; then
+    sysdup_cmd='sudo dnf update && sudo dnf upgrade && flatpak update'
+elif command -v pacman > /dev/null; then
+    sysdup_cmd='sudo pacman -Syu && flatpak update'
+elif command -v nix > /dev/null; then
+    sysdup_cmd='nh os switch --update && flatpak update'
+fi
+
+alias sysdup="$sysdup_cmd"
+
+alias grep='grep --color=auto'
+alias egrep='egrep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias vim="nvim"
+alias pn="pnpm"
+
+# export LANG=en_US.UTF-8
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# pnpm
+export PNPM_HOME="$HOME/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
+
+export PATH="$PATH:/home/caves/.local/bin"
+export JAVA_HOME=$(dirname $(dirname $(readlink -f $(which javac))))
+# export JAVA_HOME="/usr/lib/jvm/bellsoft-java21.x86_64"
+zinit ice as"command" from"gh-r" \
+          atclone"./starship init zsh > init.zsh; ./starship completions zsh > _starship" \
+          atpull"%atclone" src"init.zsh"
+zinit light starship/starship
+
