@@ -98,7 +98,7 @@ case ":$PATH:" in
 esac
 # pnpm end
 
-export PATH="$PATH:/home/caves/.local/bin"
+export PATH="$PATH:$HOME/.local/bin:$HOME/bin"
 export JAVA_HOME=$(dirname $(dirname $(readlink -f $(which javac))))
 # export JAVA_HOME="/usr/lib/jvm/bellsoft-java21.x86_64"
 zinit ice as"command" from"gh-r" \
