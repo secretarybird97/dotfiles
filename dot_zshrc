@@ -23,7 +23,11 @@ autoload -Uz _zinit
 eval "$(zoxide init zsh)"
 
 # Set up fzf key bindings and fuzzy completion
-eval "$(fzf --zsh)"
+if command -v fzf >/dev/null 2>&1 && [ "$(printf '%s\n' "$(fzf --version)" "0.48" | sort -V | head -n 1)" != "$(fzf --version)" ]; then
+    eval "$(fzf --zsh)"
+else
+    source /usr/share/doc/fzf/examples/{key-bindings,completion}.zsh
+fi
 
 # Zinit plugins
 zinit wait lucid for \
