@@ -62,13 +62,11 @@ elif command -v batcat > /dev/null; then
 fi
 
 if uname -r | grep -q 'microsoft' ; then
-    sysdup_cmd='sudo nala update && sudo nala upgrade'
+    sysdup_cmd='sudo apt-get update && sudo apt-get upgrade && sudo apt-get full-upgrade'
 elif command -v zypper > /dev/null; then
     sysdup_cmd='sudo zypper dup && flatpak update'
-elif command -v nala > /dev/null; then
-    sysdup_cmd='sudo nala update && sudo nala upgrade && flatpak update'
-elif command -v apt > /dev/null; then
-    sysdup_cmd='sudo apt update && sudo apt upgrade && flatpak update'
+elif command -v apt-get > /dev/null; then
+    sysdup_cmd='sudo apt-get update && sudo apt-get upgrade && sudo apt-get full-upgrade && flatpak update'
 elif command -v dnf > /dev/null; then
     sysdup_cmd='sudo dnf update && sudo dnf upgrade && flatpak update'
 elif command -v pacman > /dev/null; then
