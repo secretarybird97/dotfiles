@@ -98,7 +98,7 @@ esac
 
 export PATH="$PATH:$HOME/.local/bin:$HOME/bin"
 export JAVA_HOME=$(dirname $(dirname $(readlink -f $(which javac))))
-# export JAVA_HOME="/usr/lib/jvm/bellsoft-java21.x86_64"
+
 zinit ice as"command" from"gh-r" \
           atclone"./starship init zsh > init.zsh; ./starship completions zsh > _starship" \
           atpull"%atclone" src"init.zsh"
