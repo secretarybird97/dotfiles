@@ -83,6 +83,10 @@ alias fgrep='fgrep --color=auto'
 alias vim="nvim"
 alias pn="pnpm"
 
+if command -v fastfetch > /dev/null; then
+    alias neofetch='fastfetch'
+fi
+
 # export LANG=en_US.UTF-8
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
