@@ -84,7 +84,7 @@ alias vim="nvim"
 alias pn="pnpm"
 
 if command -v fastfetch > /dev/null; then
-    alias neofetch='fastfetch'
+    alias neofetch='fastfetch -c neofetch.jsonc'
 fi
 
 # export LANG=en_US.UTF-8
