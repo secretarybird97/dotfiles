@@ -69,12 +69,14 @@ setopt HIST_IGNORE_ALL_DUPS  # do not put duplicated command into history list
 setopt HIST_FIND_NO_DUPS # do not display duplicated history command
 setopt HIST_IGNORE_SPACE  # do not save command starting with space
 setopt HIST_REDUCE_BLANKS  # remove unnecessary blanks
-# setopt APPEND_HISTORY # append history to the history file
-setopt INC_APPEND_HISTORY_TIME  # append command to history file immediately after execution
 setopt SHARE_HISTORY # share history between all sessions
-setopt EXTENDED_HISTORY  # record command start time
+# setopt APPEND_HISTORY # append history to the history file
+# setopt INC_APPEND_HISTORY_TIME  # append command to history file immediately after execution
+# setopt EXTENDED_HISTORY  # record command start time
 
+# Other opt
 setopt AUTO_CD
+setopt INTERCTIVE_COMMENTS
 
 # Completion
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
