@@ -76,7 +76,7 @@ setopt SHARE_HISTORY # share history between all sessions
 
 # Other opt
 setopt AUTO_CD
-setopt INTERCTIVE_COMMENTS
+setopt INTERACTIVE_COMMENTS
 
 # Completion
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
