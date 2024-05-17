@@ -79,10 +79,11 @@ setopt AUTO_CD
 setopt INTERACTIVE_COMMENTS
 
 # Completion
+zstyle ':completion:*:git-checkout:*' sort false
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' menu no
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
 zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 
 # Aliases
@@ -99,10 +100,17 @@ alias cls='clear && clear'
 alias fetch='fastfetch -c neofetch.jsonc'
 
 # Conditional aliases based on command availability
+bat_cmd=""
 if command -v bat > /dev/null; then
-   alias cat='bat --paging=never'
+   bat_cmd='bat'
 elif command -v batcat > /dev/null; then
-   alias cat='batcat --paging=never'
+   bat_cmd='batcat'
+fi
+if [ "$bat_cmd" != "" ]; then
+   alias cat="$bat_cmd --paging=never"
+   help() {
+       "$@" --help 2>&1 | $bat_cmd --plain --language=help
+   }
 fi
 
 if uname -r | grep -q 'microsoft' ; then
