@@ -15,6 +15,19 @@ autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit#
 ### End of Zinit's installer chunk
 
+# Environment variable exports
+# export LANG=en_US.UTF-8
+export PATH="$PATH:$HOME/.local/bin:$HOME/bin"
+export JAVA_HOME=$(dirname $(dirname $(readlink -f $(which javac))))
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+export PNPM_HOME="$HOME/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+
 # Set up fzf key bindings and fuzzy completion
 if command -v fzf >/dev/null 2>&1 && [ "$(printf '%s\n' "$(fzf --version)" "0.48" | sort -V | head -n 1)" != "$(fzf --version)" ]; then
     eval "$(fzf --zsh)"
@@ -47,23 +60,21 @@ zinit snippet OMZP::command-not-found
 bindkey -v
 bindkey '^p' history-search-backward
 bindkey '^n' history-search-forward
-bindkey '^[w' kill-region
 
 # History
-HISTSIZE=1000
+HISTSIZE=262144 # remember 256 * 1024 commands
 SAVEHIST=$HISTSIZE
 HISTFILE=~/.zsh_history
-HISTDUP=erase
 setopt HIST_IGNORE_ALL_DUPS  # do not put duplicated command into history list
-setopt HIST_SAVE_NO_DUPS  # do not save duplicated command
-setopt HIST_IGNORE_SPACE  # do not save command starting with space
-setopt APPENDHISTORY # append history to the history file
-setopt SHAREHISTORY # share history between all sessions
 setopt HIST_IGNORE_DUPS # ignore duplicated history command
 setopt HIST_FIND_NO_DUPS # do not display duplicated history command
+setopt HIST_IGNORE_SPACE  # do not save command starting with space
 setopt HIST_REDUCE_BLANKS  # remove unnecessary blanks
+# setopt APPEND_HISTORY # append history to the history file
 setopt INC_APPEND_HISTORY_TIME  # append command to history file immediately after execution
+setopt SHARE_HISTORY # share history between all sessions
 setopt EXTENDED_HISTORY  # record command start time
+
 setopt AUTO_CD
 
 # Completion
@@ -74,8 +85,8 @@ zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
 zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 
 # Aliases
-alias sudo='sudo '
 # alias cd='z'
+alias sudo='sudo '
 alias ls='eza'
 alias grep='grep --color=auto'
 alias egrep='egrep --color=auto'
@@ -84,6 +95,7 @@ alias vim="nvim"
 alias pn="pnpm"
 alias ll='eza -lh'
 alias cls='clear && clear'
+alias fetch='fastfetch -c neofetch.jsonc'
 
 # Conditional aliases based on command availability
 if command -v bat > /dev/null; then
@@ -94,38 +106,20 @@ fi
 
 if uname -r | grep -q 'microsoft' ; then
     sysdup_cmd='sudo apt update && sudo apt full-upgrade'
-elif command -v apt > /dev/null; then
-    sysdup_cmd='sudo apt update && sudo apt full-upgrade && flatpak update'
-elif command -v zypper > /dev/null; then
-    sysdup_cmd='sudo zypper dup && flatpak update'
-elif command -v dnf > /dev/null; then
-    sysdup_cmd='sudo dnf update && sudo dnf upgrade && flatpak update'
-elif command -v pacman > /dev/null; then
-    sysdup_cmd='sudo pacman -Syu && flatpak update'
-elif command -v nix > /dev/null; then
-    sysdup_cmd='nh os switch --update && flatpak update'
+else
+    if command -v apt > /dev/null; then
+        sysdup_cmd='sudo apt update && sudo apt full-upgrade && flatpak update'
+    elif command -v zypper > /dev/null; then
+        sysdup_cmd='sudo zypper dup && flatpak update'
+    elif command -v dnf > /dev/null; then
+        sysdup_cmd='sudo dnf update && sudo dnf upgrade && flatpak update'
+    elif command -v pacman > /dev/null; then
+        sysdup_cmd='sudo pacman -Syu && flatpak update'
+    elif command -v nix > /dev/null; then
+        sysdup_cmd='nh os switch --update && flatpak update'
+    fi
 fi
 alias sysdup="$sysdup_cmd"
-
-if command -v fastfetch > /dev/null; then
-    alias fetch='fastfetch -c neofetch.jsonc'
-fi
-
-# export LANG=en_US.UTF-8
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-# pnpm
-export PNPM_HOME="$HOME/.local/share/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-# pnpm end
-
-export PATH="$PATH:$HOME/.local/bin:$HOME/bin"
-export JAVA_HOME=$(dirname $(dirname $(readlink -f $(which javac))))
 
 # Replay chpwd hooks for all loaded plugins
 zinit cdreplay -q
