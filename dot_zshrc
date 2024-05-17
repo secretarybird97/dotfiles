@@ -1,11 +1,5 @@
 # Use modern completion system
-autoload -Uz compinit && compinit
-bindkey -v
-
-# Keep 1000 lines of history within the shell and save it to ~/.zsh_history:
-HISTSIZE=1000
-SAVEHIST=1000
-HISTFILE=~/.zsh_history
+# autoload -Uz compinit && compinit
 
 ### Added by Zinit's installer
 if [[ ! -f $HOME/.local/share/zinit/zinit.git/zinit.zsh ]]; then
@@ -18,9 +12,8 @@ fi
 
 source "$HOME/.local/share/zinit/zinit.git/zinit.zsh"
 autoload -Uz _zinit
-(( ${+_comps} )) && _comps[zinit]=_zinit
+(( ${+_comps} )) && _comps[zinit]=_zinit#
 ### End of Zinit's installer chunk
-eval "$(zoxide init zsh)"
 
 # Set up fzf key bindings and fuzzy completion
 if command -v fzf >/dev/null 2>&1 && [ "$(printf '%s\n' "$(fzf --version)" "0.48" | sort -V | head -n 1)" != "$(fzf --version)" ]; then
@@ -28,6 +21,7 @@ if command -v fzf >/dev/null 2>&1 && [ "$(printf '%s\n' "$(fzf --version)" "0.48
 else
     source /usr/share/doc/fzf/examples/{key-bindings,completion}.zsh
 fi
+eval "$(zoxide init --cmd cd zsh)"
 
 # Zinit plugins
 zinit wait lucid for \
@@ -36,21 +30,58 @@ zinit wait lucid for \
  blockf \
     zsh-users/zsh-completions \
  atload"!_zsh_autosuggest_start" \
-    zsh-users/zsh-autosuggestions
+    zsh-users/zsh-autosuggestions \
+    Aloxaf/fzf-tab
+zinit ice as"command" from"gh-r" \
+          atclone"./starship init zsh > init.zsh; ./starship completions zsh > _starship" \
+          atpull"%atclone" src"init.zsh"
+zinit light starship/starship
 
+
+# Add in snippets
 zinit snippet OMZP::git
 zinit snippet OMZP::sudo
+zinit snippet OMZP::command-not-found
 
+# Keybindings
+bindkey -v
+bindkey '^p' history-search-backward
+bindkey '^n' history-search-forward
+bindkey '^[w' kill-region
+
+# History
+HISTSIZE=1000
+SAVEHIST=$HISTSIZE
+HISTFILE=~/.zsh_history
+HISTDUP=erase
 setopt HIST_IGNORE_ALL_DUPS  # do not put duplicated command into history list
 setopt HIST_SAVE_NO_DUPS  # do not save duplicated command
+setopt HIST_IGNORE_SPACE  # do not save command starting with space
+setopt APPENDHISTORY # append history to the history file
+setopt SHAREHISTORY # share history between all sessions
+setopt HIST_IGNORE_DUPS # ignore duplicated history command
+setopt HIST_FIND_NO_DUPS # do not display duplicated history command
 setopt HIST_REDUCE_BLANKS  # remove unnecessary blanks
 setopt INC_APPEND_HISTORY_TIME  # append command to history file immediately after execution
 setopt EXTENDED_HISTORY  # record command start time
 setopt AUTO_CD
 
+# Completion
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+zstyle ':completion:*' menu no
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
+zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
+
+# Aliases
 alias sudo='sudo '
-alias cd='z'
+# alias cd='z'
 alias ls='eza'
+alias grep='grep --color=auto'
+alias egrep='egrep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias vim="nvim"
+alias pn="pnpm"
 alias ll='eza -lh'
 alias cls='clear && clear'
 
@@ -74,14 +105,7 @@ elif command -v pacman > /dev/null; then
 elif command -v nix > /dev/null; then
     sysdup_cmd='nh os switch --update && flatpak update'
 fi
-
 alias sysdup="$sysdup_cmd"
-
-alias grep='grep --color=auto'
-alias egrep='egrep --color=auto'
-alias fgrep='fgrep --color=auto'
-alias vim="nvim"
-alias pn="pnpm"
 
 if command -v fastfetch > /dev/null; then
     alias fetch='fastfetch -c neofetch.jsonc'
@@ -103,8 +127,5 @@ esac
 export PATH="$PATH:$HOME/.local/bin:$HOME/bin"
 export JAVA_HOME=$(dirname $(dirname $(readlink -f $(which javac))))
 
-zinit ice as"command" from"gh-r" \
-          atclone"./starship init zsh > init.zsh; ./starship completions zsh > _starship" \
-          atpull"%atclone" src"init.zsh"
-zinit light starship/starship
-
+# Replay chpwd hooks for all loaded plugins
+zinit cdreplay -q
