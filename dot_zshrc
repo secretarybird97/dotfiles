@@ -117,15 +117,15 @@ if uname -r | grep -q 'microsoft' ; then
     sysdup_cmd='sudo apt update && sudo apt full-upgrade'
 else
     if command -v apt > /dev/null; then
-        sysdup_cmd='sudo apt update && sudo apt full-upgrade && flatpak update'
+        sysdup_cmd='sudo apt update && sudo apt full-upgrade && sudo flatpak update'
     elif command -v zypper > /dev/null; then
-        sysdup_cmd='sudo zypper dup && flatpak update'
+        sysdup_cmd='sudo zypper dup && sudo flatpak update'
     elif command -v dnf > /dev/null; then
-        sysdup_cmd='sudo dnf update && sudo dnf upgrade && flatpak update'
+        sysdup_cmd='sudo dnf update && sudo dnf upgrade && sudo flatpak update'
     elif command -v pacman > /dev/null; then
-        sysdup_cmd='sudo pacman -Syu && flatpak update'
+        sysdup_cmd='sudo pacman -Syu && sudo flatpak update'
     elif command -v nix > /dev/null; then
-        sysdup_cmd='nh os switch --update && flatpak update'
+        sysdup_cmd='nh os switch --update && sudo flatpak update'
     fi
 fi
 alias sysdup="$sysdup_cmd"
