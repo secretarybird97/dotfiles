@@ -35,6 +35,7 @@ else
     source /usr/share/doc/fzf/examples/{key-bindings,completion}.zsh
 fi
 eval "$(zoxide init --cmd cd zsh)"
+eval "$(thefuck --alias fk)"
 
 # Zinit plugins
 zinit wait lucid for \
