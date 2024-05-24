@@ -95,12 +95,13 @@ zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 # alias cd='z'
 alias sudo='sudo '
 alias ls='eza'
+alias l='eza -l --icons --git'
+alias ll='eza -l --icons --git -a'
 alias grep='grep --color=auto'
 alias egrep='egrep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias vim="nvim"
 alias pn="pnpm"
-alias ll='eza -lh'
 alias cls='clear && clear'
 alias fetch='fastfetch -c neofetch.jsonc'
 
