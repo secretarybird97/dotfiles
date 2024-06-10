@@ -36,6 +36,7 @@ else
 fi
 eval "$(zoxide init --cmd cd zsh)"
 eval "$(thefuck --alias fk)"
+eval "$(pyenv virtualenv-init -)"
 
 # Zinit plugins
 zinit wait lucid for \
