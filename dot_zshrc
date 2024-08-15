@@ -27,6 +27,8 @@ case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
+export DOTNET_ROOT=/usr/share/dotnet
+export PATH=$PATH:$DOTNET_ROOT:$HOME/.dotnet/tools
 
 # Set up fzf key bindings and fuzzy completion
 if command -v fzf >/dev/null 2>&1 && [ "$(printf '%s\n' "$(fzf --version)" "0.48" | sort -V | head -n 1)" != "$(fzf --version)" ]; then
