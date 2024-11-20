@@ -29,7 +29,8 @@ case ":$PATH:" in
 esac
 export DOTNET_ROOT=/usr/share/dotnet
 export PATH=$PATH:$DOTNET_ROOT:$HOME/.dotnet/tools
-export PATH="~/.pyenv/bin:$PATH"
+export PYENV_ROOT="$HOME/.pyenv"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
 
 # Set up fzf key bindings and fuzzy completion
 if command -v fzf >/dev/null 2>&1 && [ "$(printf '%s\n' "$(fzf --version)" "0.48" | sort -V | head -n 1)" != "$(fzf --version)" ]; then
@@ -38,7 +39,7 @@ else
     source /usr/share/doc/fzf/examples/{key-bindings,completion}.zsh
 fi
 eval "$(zoxide init --cmd cd zsh)"
-eval "$(pyenv virtualenv-init -)"
+eval "$(pyenv init -)"
 
 # Zinit plugins
 zinit wait lucid for \
