@@ -1,6 +1,6 @@
 alias sudo='sudo '
 alias ls='eza'
-alias l='eza -CF --icons --git'
+alias l='eza -F --icons --git'
 alias ll='eza -alF --icons --git'
 alias la='eza -A --icons --git'
 alias grep='grep --color=auto'
