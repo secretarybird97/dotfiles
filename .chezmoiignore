@@ -2,6 +2,7 @@
 .alias
 .zshrc
 .config
+.hushlogin
 {{ end}}
 {{ if ne .chezmoi.os "windows"}}
 .wslconfig
