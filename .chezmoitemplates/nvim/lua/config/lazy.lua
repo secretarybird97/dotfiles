@@ -23,6 +23,8 @@ require("lazy").setup({
     { import = "lazyvim.plugins.extras.lang.markdown" },
     { import = "lazyvim.plugins.extras.util.dot" },
     { import = "lazyvim.plugins.extras.lang.json" },
+    { import = "lazyvim.plugins.extras.coding.nvim-cmp" },
+    { import = "lazyvim.plugins.extras.lsp.none-ls" },
     { import = "plugins" },
   },
   defaults = {
