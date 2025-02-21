@@ -8,4 +8,5 @@
 .wslconfig
 .glzr
 AppData
+Documents
 {{ end}}
