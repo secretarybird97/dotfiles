@@ -6,7 +6,6 @@ alias la='eza -A --icons --git'
 alias grep='grep --color=auto'
 alias egrep='egrep --color=auto'
 alias fgrep='fgrep --color=auto'
-alias vim="nvim"
 alias pn="pnpm"
 alias cls='clear && clear'
 alias fetch='fastfetch -c neofetch.jsonc'
