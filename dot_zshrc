@@ -52,7 +52,7 @@ else
 fi
 
 # History
-HISTSIZE=262144 # remember 256 * 1024 commands
+HISTSIZE=2000
 SAVEHIST=$HISTSIZE
 HISTFILE=~/.zsh_history
 setopt histignorealldups  # do not put duplicated command into history list
@@ -67,6 +67,9 @@ setopt histreduceblanks  # remove unnecessary blanks
 # Other options
 setopt autocd
 setopt interactivecomments
+
+# make less more friendly for non-text input files
+[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
 # Compilation flags
 # export ARCHFLAGS="-arch $(uname -m)"
