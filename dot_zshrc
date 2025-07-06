@@ -23,11 +23,12 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 # Java
-export JAVA_HOME=$(dirname $(dirname $(readlink -f $(which javac))))
+if command -v javac >/dev/null 2>&1; then
+  export JAVA_HOME="$(dirname "$(dirname "$(readlink -f "$(which javac)")")")"
+fi
 
 # dotnet
-export DOTNET_ROOT=/usr/share/dotnet
-export PATH=$PATH:$DOTNET_ROOT:$HOME/.dotnet/tools
+export PATH=$HOME/.dotnet/tools:$PATH
 
 # pnpm
 export PNPM_HOME="/home/caves/.local/share/pnpm"
